@@ -31,8 +31,11 @@ const getSingleUserFormDb = async (userId: string) => {
 };
 
 //-------------------------------------------------------
-const updateUserFormDb = async (userId: string, updatedData: TUser) => {
-  const result = await UserModel.updateOne({ userId }, { $set: updatedData });
+const updateUserFormDb = async (userId: string, updatingData: TUser) => {
+  const result = await UserModel.findOneAndUpdate({ userId }, updatingData, {
+    new: true,
+    projection: { password: 0 },
+  });
   return result;
 };
 

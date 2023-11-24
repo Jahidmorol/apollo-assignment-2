@@ -3,16 +3,23 @@ import { Request, Response } from 'express';
 import { userServices } from './user.service';
 import { validatedUser } from './user.validation';
 
+//----------------
 const createUser = async (req: Request, res: Response) => {
   try {
     const { user: userData } = req.body;
     const validationDataWithZod = validatedUser.parse(userData);
     const result = await userServices.createUserIntoDb(validationDataWithZod);
 
+    const resultWithoutPass = {
+      ...result.toObject(),
+      password: undefined,
+      _id: undefined,
+    };
+
     res.status(200).json({
       success: true,
       message: 'User created successfully!',
-      data: result,
+      data: resultWithoutPass,
     });
   } catch (error: any) {
     res.status(500).json({
@@ -73,7 +80,7 @@ const findSingleUser = async (req: Request, res: Response) => {
   }
 };
 
-//------------------
+//-----------------
 const updateUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
@@ -83,6 +90,17 @@ const updateUser = async (req: Request, res: Response) => {
       userId,
       validationDataWithZod,
     );
+
+    if (!result) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found',
+        error: {
+          code: 404,
+          description: 'User not found!',
+        },
+      });
+    }
 
     res.status(200).json({
       success: true,
@@ -98,7 +116,7 @@ const updateUser = async (req: Request, res: Response) => {
   }
 };
 
-//----------------------
+//-----------------
 const deleteUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
@@ -128,6 +146,7 @@ const deleteUser = async (req: Request, res: Response) => {
   }
 };
 
+//---------------------**************-------------------------//
 export const userController = {
   createUser,
   findUsers,
