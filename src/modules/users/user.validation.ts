@@ -16,11 +16,9 @@ const validatedUser = z.object({
   username: z.string().min(1, 'Username must not be empty'),
   password: z.string().min(6, 'Password must be at least 6 characters long'),
   fullName: validatedFullName,
-  age: z.number().min(1, 'Age must be a positive number'),
+  age: z.number().positive('Age must be a positive number'),
   email: z.string().email('Invalid email format'),
-  isActive: z.boolean().refine((value) => value !== undefined, {
-    message: 'isActive is required',
-  }),
+  isActive: z.boolean(),
   hobbies: z.array(z.string().min(1, 'Hobby must not be empty')),
   address: validatedUserAddress,
 });

@@ -32,13 +32,13 @@ const getSingleUserFormDb = async (userId: string) => {
 
 //-------------------------------------------------------
 const updateUserFormDb = async (userId: string, updatedData: TUser) => {
-  const result = await UserModel.updateOne({ userId, updatedData });
+  const result = await UserModel.updateOne({ userId }, { $set: updatedData });
   return result;
 };
 
 //------------------------------------------------------
 const deleteUserFormDb = async (userId: string) => {
-  const result = await UserModel.deleteOne({ userId });
+  const result = await UserModel.findOneAndDelete({ userId });
   return result;
 };
 
