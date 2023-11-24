@@ -30,7 +30,23 @@ const findUsers = async (req: Request, res: Response) => {
   }
 };
 
+const findSingleUser = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    const result = await userServices.getSingleUserFormDb(userId);
+
+    res.status(200).json({
+      success: true,
+      message: 'User fetched successfully!',
+      data: result,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const userController = {
   createUser,
   findUsers,
+  findSingleUser,
 };
