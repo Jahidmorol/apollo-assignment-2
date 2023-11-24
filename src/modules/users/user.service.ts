@@ -36,10 +36,17 @@ const updateUserFormDb = async (userId: string, updatedData: TUser) => {
   return result;
 };
 
+//------------------------------------------------------
+const deleteUserFormDb = async (userId: string) => {
+  const result = await UserModel.deleteOne({ userId });
+  return result;
+};
+
 //-------------*********************************--------------------
 export const userServices = {
   createUserIntoDb,
   getAllUsersFromDb,
   getSingleUserFormDb,
   updateUserFormDb,
+  deleteUserFormDb,
 };
