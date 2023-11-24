@@ -24,8 +24,15 @@ const getAllUsersFromDb = async () => {
   return result;
 };
 
+//-------------------------------------------------------
 const getSingleUserFormDb = async (userId: string) => {
   const result = await UserModel.findOne({ userId });
+  return result;
+};
+
+//-------------------------------------------------------
+const updateUserFormDb = async (userId: string, updatedData: TUser) => {
+  const result = await UserModel.updateOne({ userId, updatedData });
   return result;
 };
 
@@ -34,4 +41,5 @@ export const userServices = {
   createUserIntoDb,
   getAllUsersFromDb,
   getSingleUserFormDb,
+  updateUserFormDb,
 };

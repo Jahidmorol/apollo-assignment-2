@@ -16,6 +16,7 @@ const createUser = async (req: Request, res: Response) => {
   }
 };
 
+//----------------
 const findUsers = async (req: Request, res: Response) => {
   try {
     const result = await userServices.getAllUsersFromDb();
@@ -30,6 +31,7 @@ const findUsers = async (req: Request, res: Response) => {
   }
 };
 
+//----------------
 const findSingleUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
@@ -45,8 +47,26 @@ const findSingleUser = async (req: Request, res: Response) => {
   }
 };
 
+//------------------
+const updateUser = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    const updatedData = req.body;
+    const result = await userServices.updateUserFormDb(userId, updatedData);
+
+    res.status(200).json({
+      success: true,
+      message: 'User updated successfully!',
+      data: result,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const userController = {
   createUser,
   findUsers,
   findSingleUser,
+  updateUser,
 };
