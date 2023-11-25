@@ -205,7 +205,9 @@ const getAllOrdersForUser = async (req: Request, res: Response) => {
       });
     }
 
-    if (!user.orders || user.orders.length === 0) {
+    const orders = await userServices.getAllOrdersForUserFormDb(userId);
+
+    if (!orders || orders.orders?.length === 0) {
       return res.status(200).json({
         success: true,
         message: 'No orders found for the user',
@@ -213,14 +215,10 @@ const getAllOrdersForUser = async (req: Request, res: Response) => {
       });
     }
 
-    const orders = await userServices.getAllOrdersForUserFormDb(userId);
-
     res.status(200).json({
       success: true,
       message: 'Orders fetched successfully!',
-      data: {
-        orders,
-      },
+      data: { orders: orders.orders },
     });
   } catch (error: any) {
     res.status(500).json({

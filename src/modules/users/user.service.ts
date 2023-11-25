@@ -29,7 +29,10 @@ const getAllUsersFromDb = async () => {
 
 //-------------------------------------------------------
 const getSingleUserFormDb = async (userId: string) => {
-  const result = await UserModel.findOne({ userId });
+  const result = await UserModel.findOne(
+    { userId },
+    { password: 0, 'fullName._id': 0, _id: 0, 'address._id': 0, orders: 0 },
+  );
   return result;
 };
 
@@ -86,8 +89,7 @@ const addProductForSingleUserFromDb = async (
 
 //------------------------------------------------------
 const getAllOrdersForUserFormDb = async (userId: string) => {
-  const id = Number(userId);
-  const result = await UserModel.findOne({ userId: id }, { orders: 1 });
+  const result = await UserModel.findOne({ userId: userId }, { orders: 1 });
   return result;
 };
 

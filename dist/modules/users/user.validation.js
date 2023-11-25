@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validatedUser = exports.updateUserValidationSchema = void 0;
+exports.validatedUser = exports.validatedUpdateUser = void 0;
 const zod_1 = require("zod");
 const validatedFullName = zod_1.z.object({
     firstName: zod_1.z.string().min(1, 'First name must not be empty'),
@@ -29,7 +29,7 @@ const validatedUser = zod_1.z.object({
     orders: zod_1.z.array(validatedUserOrders).optional().default([]),
 });
 exports.validatedUser = validatedUser;
-exports.updateUserValidationSchema = zod_1.z.object({
+exports.validatedUpdateUser = zod_1.z.object({
     userId: zod_1.z.number().optional(),
     username: zod_1.z.string().optional(),
     fullName: zod_1.z

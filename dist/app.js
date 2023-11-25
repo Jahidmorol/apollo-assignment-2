@@ -12,6 +12,6 @@ app.use(express_1.default.json());
 app.use((0, cors_1.default)());
 app.use('/api/users', user_route_1.userRoute);
 app.get('/', (req, res) => {
-    res.send('second assignment is going to be');
+    res.send('Server is running');
 });
 exports.default = app;
