@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response } from 'express';
 import { userServices } from './user.service';
-import { validatedUser } from './user.validation';
+import { validatedUpdateUser, validatedUser } from './user.validation';
 
 //----------------
 const createUser = async (req: Request, res: Response) => {
@@ -79,7 +79,7 @@ const updateUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
     const updatedData = req.body;
-    const validationDataWithZod = validatedUser.parse(updatedData);
+    const validationDataWithZod = validatedUpdateUser.parse(updatedData);
     const result = await userServices.updateUserFormDb(
       userId,
       validationDataWithZod,

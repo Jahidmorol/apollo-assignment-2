@@ -84,7 +84,7 @@ const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     try {
         const { userId } = req.params;
         const updatedData = req.body;
-        const validationDataWithZod = user_validation_1.validatedUser.parse(updatedData);
+        const validationDataWithZod = user_validation_1.updateUserValidationSchema.parse(updatedData);
         const result = yield user_service_1.userServices.updateUserFormDb(userId, validationDataWithZod);
         if (!result) {
             return res.status(404).json({

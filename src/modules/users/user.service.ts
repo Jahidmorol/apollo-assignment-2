@@ -34,11 +34,22 @@ const getSingleUserFormDb = async (userId: string) => {
 };
 
 //-------------------------------------------------------
-const updateUserFormDb = async (userId: string, updatingData: TUser) => {
-  const result = await UserModel.findOneAndUpdate({ userId }, updatingData, {
-    new: true,
-    projection: { password: 0, _id: 0 },
-  });
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const updateUserFormDb = async (userId: string, updatingData: any) => {
+  const result = await UserModel.findOneAndUpdate(
+    { userId },
+    { $set: updatingData },
+    {
+      new: true,
+      projection: {
+        password: 0,
+        'fullName._id': 0,
+        _id: 0,
+        'address._id': 0,
+        orders: 0,
+      },
+    },
+  );
   return result;
 };
 

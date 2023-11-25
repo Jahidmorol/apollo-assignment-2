@@ -13,7 +13,8 @@ exports.userServices = void 0;
 const user_model_1 = require("./user.model");
 const createUserIntoDb = (userData) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield user_model_1.UserModel.create(userData);
-    return result;
+    const userWithoutSensitiveInfo = yield user_model_1.UserModel.findById(result._id).select('-password -_id -orders');
+    return userWithoutSensitiveInfo;
 });
 //----------------------------------------------------------------
 const getAllUsersFromDb = () => __awaiter(void 0, void 0, void 0, function* () {
@@ -35,10 +36,17 @@ const getSingleUserFormDb = (userId) => __awaiter(void 0, void 0, void 0, functi
     return result;
 });
 //-------------------------------------------------------
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const updateUserFormDb = (userId, updatingData) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield user_model_1.UserModel.findOneAndUpdate({ userId }, updatingData, {
+    const result = yield user_model_1.UserModel.findOneAndUpdate({ userId }, { $set: updatingData }, {
         new: true,
-        projection: { password: 0, _id: 0 },
+        projection: {
+            password: 0,
+            'fullName._id': 0,
+            _id: 0,
+            'address._id': 0,
+            orders: 0,
+        },
     });
     return result;
 });
