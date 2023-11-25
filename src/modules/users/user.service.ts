@@ -3,7 +3,10 @@ import { UserModel } from './user.model';
 
 const createUserIntoDb = async (userData: TUser) => {
   const result = await UserModel.create(userData);
-  return result;
+  const userWithoutSensitiveInfo = await UserModel.findById(result._id).select(
+    '-password -_id -orders',
+  );
+  return userWithoutSensitiveInfo;
 };
 
 //----------------------------------------------------------------
