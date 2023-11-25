@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project is a Node.js Express application developed in TypeScript. It integrates MongoDB with Mongoose for user data and order management. The application focuses on achieving CRUD operations with data integrity through validation using Joi/Zod.
+This project is a Node.js Express application developed in TypeScript. It integrates MongoDB with Mongoose for user data and order management. The application focuses on achieving CRUD operations with data integrity through validation using Zod.
 
 ## Prerequisites
 
@@ -19,12 +19,12 @@ To run this project locally, follow these steps:
 1. _Clone the repository:_
 
    bash
-   git clone https://github.com/mehedihasan8/nextLevel2.git
+   git clone https://github.com/Jahidmorol/apollo-assignment-2.git
 
 2. _Navigate to the project directory:_
 
    typescript
-   cd nextLevele2
+   cd apollo-assignment-2
 
 3. _Install dependencies:_
 
@@ -40,36 +40,62 @@ then access the API, make requests to `http://localhost:5000` your local server.
 
 # API Endpoints
 
-### Create new User
+### Create a new user
+
+-_Endpoint:_ **POST /api/users**
 
 - _Method:_ `POST`
 - _URL:_ `http://localhost:5000/api/users`
-- _Description:_ Create new User
 
-### Get User by ID
+### Retrieve a list of all users
 
-- _Method:_ `GET`
-- _URL:_ `http://localhost:5000/users/{userId}`
-- _Description:_ Get User by ID
-
-### Update User by ID
-
-- _Method:_ `PUT`
-- _URL:_ `http://localhost:5000/api/{userId}`
-- _Description:_ Update User by ID
-
-### Delete User by ID
-
-- _Method:_ `DELETE`
-- _URL:_ `http://localhost:5000/api/{userId}`
-- _Description:_ Delete User by ID
-
-### Get All Users
+-_Endpoint:_ **GET /api/users**
 
 - _Method:_ `GET`
 - _URL:_ `http://localhost:5000/api/users`
-- _Description:_ Get All Users
+
+### Retrieve a specific user by ID
+
+-_Endpoint:_ **GET /api/users/:userId**
+
+- _Method:_ `GET`
+- _URL:_ `http://localhost:5000/users/{userId}`
+
+### Update user information
+
+-_Endpoint:_ **PUT /api/users/:userId**
+
+- _Method:_ `PUT`
+- _URL:_ `http://localhost:5000/api/users/{userId}`
+
+### Delete a user
+
+-_Endpoint:_ **DELETE /api/users/:userId**
+
+- _Method:_ `DELETE`
+- _URL:_ `http://localhost:5000/api/{userId}`
+
+### Add New Product in Order
+
+-_Endpoint:_ **PUT /api/users/:userId/orders**
+
+- _Method:_ `PUT`
+- _URL:_ `http://localhost:5000/api/users/{userId}/orders`
+
+### Retrieve all orders for a specific user
+
+-_Endpoint:_ **GET /api/users/:userId/orders**
+
+- _Method:_ `GET`
+- _URL:_ `http://localhost:5000/api/users/{userId}/orders`
+
+### Calculate Total Price of Orders for a Specific User
+
+-_Endpoint:_ **GET /api/users/:userId/orders/total-price**
+
+- _Method:_ `GET`
+- _URL:_ `http://localhost:5000/api/users/{userId}/orders/total-price`
 
 ## host on vercel
 
-- [Vercel lInk](https://assignment-2-pied-eight.vercel.app/)
+- [Vercel lInk](https://assignment-2-two-theta.vercel.app/)

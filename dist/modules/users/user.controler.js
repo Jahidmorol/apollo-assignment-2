@@ -11,10 +11,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.userController = void 0;
 const user_service_1 = require("./user.service");
+const user_validation_1 = require("./user.validation");
+//----------------
 const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const userData = req.body;
-        const result = yield user_service_1.userServices.createUserIntoDb(userData);
+        const { user: userData } = req.body;
+        const validationDataWithZod = user_validation_1.validatedUser.parse(userData);
+        const result = yield user_service_1.userServices.createUserIntoDb(validationDataWithZod);
         res.status(200).json({
             success: true,
             message: 'User created successfully!',
@@ -22,9 +25,247 @@ const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         });
     }
     catch (error) {
-        console.log(error);
+        res.status(500).json({
+            success: false,
+            message: error.message || 'Something went wrong',
+            data: error,
+        });
     }
 });
+//----------------
+const findUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const result = yield user_service_1.userServices.getAllUsersFromDb();
+        res.status(200).json({
+            success: true,
+            message: 'Users fetched successfully!',
+            data: result,
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message || 'Something went wrong',
+            data: error,
+        });
+    }
+});
+//----------------
+const findSingleUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { userId } = req.params;
+        const user = yield user_service_1.userServices.getSingleUserFormDb(userId);
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'User not found',
+                error: {
+                    code: 404,
+                    description: 'User not found!',
+                },
+            });
+        }
+        res.status(200).json({
+            success: true,
+            message: 'User fetched successfully!',
+            data: user,
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message || 'Something went wrong',
+            data: error,
+        });
+    }
+});
+//-----------------
+const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { userId } = req.params;
+        const updatedData = req.body;
+        const validationDataWithZod = user_validation_1.validatedUser.parse(updatedData);
+        const result = yield user_service_1.userServices.updateUserFormDb(userId, validationDataWithZod);
+        if (!result) {
+            return res.status(404).json({
+                success: false,
+                message: 'User not found',
+                error: {
+                    code: 404,
+                    description: 'User not found!',
+                },
+            });
+        }
+        res.status(200).json({
+            success: true,
+            message: 'User updated successfully!',
+            data: result,
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message || 'Something went wrong',
+            data: error,
+        });
+    }
+});
+//-----------------
+const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { userId } = req.params;
+        const deletedUser = yield user_service_1.userServices.deleteUserFormDb(userId);
+        if (!deletedUser) {
+            return res.status(404).json({
+                success: false,
+                message: 'User not found',
+                error: {
+                    code: 404,
+                    description: 'User not found!',
+                },
+            });
+        }
+        res.status(200).json({
+            success: true,
+            message: 'User deleted successfully!',
+            data: null,
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message || 'Something went wrong',
+            data: error,
+        });
+    }
+});
+//-----------------
+const addProductForSingleUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { userId } = req.params;
+        const { productName, price, quantity } = req.body;
+        const user = yield user_service_1.userServices.getSingleUserFormDb(userId);
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'User not found',
+                error: {
+                    code: 404,
+                    description: 'User not found!',
+                },
+            });
+        }
+        yield user_service_1.userServices.addProductForSingleUserFromDb(userId, productName, price, quantity);
+        // user.orders = user.orders || [];
+        // user.orders.push({
+        //   productName,
+        //   price,
+        //   quantity,
+        // });
+        // await user.save();
+        res.status(200).json({
+            success: true,
+            message: 'Order created successfully!',
+            data: null,
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message || 'Something went wrong',
+            data: error,
+        });
+    }
+});
+//-----------------
+const getAllOrdersForUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { userId } = req.params;
+        const user = yield user_service_1.userServices.getSingleUserFormDb(userId);
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'User not found',
+                error: {
+                    code: 404,
+                    description: 'User not found!',
+                },
+            });
+        }
+        if (!user.orders || user.orders.length === 0) {
+            return res.status(200).json({
+                success: true,
+                message: 'No orders found for the user',
+                data: null,
+            });
+        }
+        const orders = yield user_service_1.userServices.getAllOrdersForUserFormDb(userId);
+        res.status(200).json({
+            success: true,
+            message: 'Orders fetched successfully!',
+            data: {
+                orders,
+            },
+        });
+    }
+    catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message || 'Something went wrong',
+            data: error,
+        });
+    }
+});
+//-----------------
+const getTotalOrdersPriceForUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { userId } = req.params;
+        const user = yield user_service_1.userServices.getSingleUserFormDb(userId);
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'User not found',
+                error: {
+                    code: 404,
+                    description: 'User not found!',
+                },
+            });
+        }
+        if (!user.orders || user.orders.length === 0) {
+            return res.status(200).json({
+                success: true,
+                message: 'No orders found for the user',
+                data: {
+                    orders: [],
+                },
+            });
+        }
+        const totalPrice = yield user_service_1.userServices.getTotalPriceForUserOrderFormDb(userId);
+        res.status(200).json({
+            success: true,
+            message: 'Total price calculated successfully!',
+            data: {
+                totalPrice: totalPrice,
+            },
+        });
+        res.status(200).json();
+    }
+    catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message || 'Something went wrong',
+            data: error,
+        });
+    }
+});
+//---------------------**************-------------------------//
 exports.userController = {
     createUser,
+    findUsers,
+    findSingleUser,
+    updateUser,
+    deleteUser,
+    addProductForSingleUser,
+    getAllOrdersForUser,
+    getTotalOrdersPriceForUser,
 };
