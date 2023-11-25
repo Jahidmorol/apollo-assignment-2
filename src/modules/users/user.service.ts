@@ -34,7 +34,7 @@ const getSingleUserFormDb = async (userId: string) => {
 const updateUserFormDb = async (userId: string, updatingData: TUser) => {
   const result = await UserModel.findOneAndUpdate({ userId }, updatingData, {
     new: true,
-    projection: { password: 0 },
+    projection: { password: 0, _id: 0 },
   });
   return result;
 };
@@ -58,12 +58,29 @@ const getAllOrdersForUserFormDb = async (userId: string) => {
 };
 
 //------------------------------------------------------
-// const getTotalOrdersPriceForUserFormDb = async (userId: string) => {
-//   const result = await UserModel.findOne({ userId });
-//   if (result.orders.length > 0) {
-//   }
-//   return result;
-// };
+const getTotalPriceForUserOrderFormDb = async (userId: string) => {
+  const id = Number(userId);
+  const result = await UserModel.aggregate([
+    { $match: { userId: id } },
+    {
+      $project: {
+        totalOrdersPrice: {
+          $reduce: {
+            input: '$orders',
+            initialValue: 0,
+            in: {
+              $add: [
+                '$$value',
+                { $multiply: ['$$this.price', '$$this.quantity'] },
+              ],
+            },
+          },
+        },
+      },
+    },
+  ]);
+  return result;
+};
 
 //-------------*********************************--------------------
 export const userServices = {
@@ -74,5 +91,5 @@ export const userServices = {
   deleteUserFormDb,
   addProductForSingleUserFromDb,
   getAllOrdersForUserFormDb,
-  //   getTotalOrdersPriceForUserFormDb,
+  getTotalPriceForUserOrderFormDb,
 };

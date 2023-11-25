@@ -10,17 +10,17 @@ const createUser = async (req: Request, res: Response) => {
     const validationDataWithZod = validatedUser.parse(userData);
     const result = await userServices.createUserIntoDb(validationDataWithZod);
 
-    const resultWithoutPass = {
-      ...result.toObject(),
-      password: undefined,
-      _id: undefined,
-      orders: undefined,
-    };
+    // const resultWithoutPass = {
+    //   ...result.toObject(),
+    //   password: undefined,
+    //   _id: undefined,
+    //   orders: undefined,
+    // };
 
     res.status(200).json({
       success: true,
       message: 'User created successfully!',
-      data: resultWithoutPass,
+      data: result,
     });
   } catch (error: any) {
     res.status(500).json({
@@ -232,6 +232,7 @@ const getAllOrdersForUser = async (req: Request, res: Response) => {
   }
 };
 
+//-----------------
 const getTotalOrdersPriceForUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
@@ -258,10 +259,8 @@ const getTotalOrdersPriceForUser = async (req: Request, res: Response) => {
       });
     }
 
-    const totalPrice = user.orders.reduce(
-      (sum, order) => sum + order.price * order.quantity,
-      0,
-    );
+    const totalPrice =
+      await userServices.getTotalPriceForUserOrderFormDb(userId);
 
     res.status(200).json({
       success: true,
@@ -280,6 +279,7 @@ const getTotalOrdersPriceForUser = async (req: Request, res: Response) => {
     });
   }
 };
+
 //---------------------**************-------------------------//
 export const userController = {
   createUser,
