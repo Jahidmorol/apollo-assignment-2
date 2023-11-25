@@ -11,6 +11,12 @@ const validatedUserAddress = z.object({
   country: z.string().min(1, 'Country must not be empty'),
 });
 
+const validatedUserOrders = z.object({
+  productName: z.string().min(1, 'Product Name must not be empty'),
+  price: z.number().min(1, 'Price must not be empty'),
+  quantity: z.number().min(1, 'Quantity must not be empty'),
+});
+
 const validatedUser = z.object({
   userId: z.number().positive('User ID must be a positive number'),
   username: z.string().min(1, 'Username must not be empty'),
@@ -21,6 +27,7 @@ const validatedUser = z.object({
   isActive: z.boolean(),
   hobbies: z.array(z.string().min(1, 'Hobby must not be empty')),
   address: validatedUserAddress,
+  orders: z.array(validatedUserOrders).optional().default([]),
 });
 
 export { validatedUser };
