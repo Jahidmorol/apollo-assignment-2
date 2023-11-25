@@ -93,6 +93,7 @@ const getTotalPriceForUserOrderFormDb = (userId) => __awaiter(void 0, void 0, vo
                         },
                     },
                 },
+                orders: 1,
             },
         },
     ]);

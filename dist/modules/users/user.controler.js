@@ -217,6 +217,7 @@ const getAllOrdersForUser = (req, res) => __awaiter(void 0, void 0, void 0, func
 });
 //-----------------
 const getTotalOrdersPriceForUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _b, _c, _d;
     try {
         const { userId } = req.params;
         const user = yield user_service_1.userServices.getSingleUserFormDb(userId);
@@ -230,21 +231,21 @@ const getTotalOrdersPriceForUser = (req, res) => __awaiter(void 0, void 0, void 
                 },
             });
         }
-        if (!user.orders || user.orders.length === 0) {
+        const orders = yield user_service_1.userServices.getTotalPriceForUserOrderFormDb(userId);
+        if (!orders || !((_b = orders[0]) === null || _b === void 0 ? void 0 : _b.orders) || ((_c = orders[0]) === null || _c === void 0 ? void 0 : _c.orders.length) === 0) {
             return res.status(200).json({
                 success: true,
                 message: 'No orders found for the user',
                 data: {
-                    orders: [],
+                    orders: 'No orders found',
                 },
             });
         }
-        const totalPrice = yield user_service_1.userServices.getTotalPriceForUserOrderFormDb(userId);
         res.status(200).json({
             success: true,
             message: 'Total price calculated successfully!',
             data: {
-                totalPrice: totalPrice,
+                totalPrice: (_d = orders[0]) === null || _d === void 0 ? void 0 : _d.totalOrdersPrice,
             },
         });
         res.status(200).json();
