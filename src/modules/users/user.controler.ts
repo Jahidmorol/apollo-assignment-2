@@ -246,24 +246,22 @@ const getTotalOrdersPriceForUser = async (req: Request, res: Response) => {
       });
     }
 
-    if (!user.orders || user.orders.length === 0) {
+    const orders = await userServices.getTotalPriceForUserOrderFormDb(userId);
+    if (!orders || !orders[0]?.orders || orders[0]?.orders.length === 0) {
       return res.status(200).json({
         success: true,
         message: 'No orders found for the user',
         data: {
-          orders: [],
+          orders: 'No orders found',
         },
       });
     }
-
-    const totalPrice =
-      await userServices.getTotalPriceForUserOrderFormDb(userId);
 
     res.status(200).json({
       success: true,
       message: 'Total price calculated successfully!',
       data: {
-        totalPrice: totalPrice,
+        totalPrice: orders[0]?.totalOrdersPrice,
       },
     });
 

@@ -112,6 +112,7 @@ const getTotalPriceForUserOrderFormDb = async (userId: string) => {
             },
           },
         },
+        orders: 1,
       },
     },
   ]);
