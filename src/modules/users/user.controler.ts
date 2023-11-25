@@ -10,13 +10,6 @@ const createUser = async (req: Request, res: Response) => {
     const validationDataWithZod = validatedUser.parse(userData);
     const result = await userServices.createUserIntoDb(validationDataWithZod);
 
-    // const resultWithoutPass = {
-    //   ...result.toObject(),
-    //   password: undefined,
-    //   _id: undefined,
-    //   orders: undefined,
-    // };
-
     res.status(200).json({
       success: true,
       message: 'User created successfully!',
@@ -216,17 +209,17 @@ const getAllOrdersForUser = async (req: Request, res: Response) => {
       return res.status(200).json({
         success: true,
         message: 'No orders found for the user',
-        data: {
-          orders: [],
-        },
+        data: null,
       });
     }
+
+    const orders = await userServices.getAllOrdersForUserFormDb(userId);
 
     res.status(200).json({
       success: true,
       message: 'Orders fetched successfully!',
       data: {
-        orders: user.orders,
+        orders,
       },
     });
   } catch (error: any) {

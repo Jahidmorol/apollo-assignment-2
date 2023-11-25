@@ -46,12 +46,6 @@ const deleteUserFormDb = async (userId: string) => {
 };
 
 //------------------------------------------------------
-const getAllOrdersForUserFormDb = async (userId: string) => {
-  const result = await UserModel.findOne({ userId });
-  return result;
-};
-
-//------------------------------------------------------
 const addProductForSingleUserFromDb = async (
   userId: string,
   productName: string,
@@ -73,6 +67,13 @@ const addProductForSingleUserFromDb = async (
     },
     { upsert: true },
   );
+  return result;
+};
+
+//------------------------------------------------------
+const getAllOrdersForUserFormDb = async (userId: string) => {
+  const id = Number(userId);
+  const result = await UserModel.findOne({ userId: id }, { orders: 1 });
   return result;
 };
 
