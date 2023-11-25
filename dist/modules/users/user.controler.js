@@ -179,6 +179,7 @@ const addProductForSingleUser = (req, res) => __awaiter(void 0, void 0, void 0, 
 });
 //-----------------
 const getAllOrdersForUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     try {
         const { userId } = req.params;
         const user = yield user_service_1.userServices.getSingleUserFormDb(userId);
@@ -192,20 +193,18 @@ const getAllOrdersForUser = (req, res) => __awaiter(void 0, void 0, void 0, func
                 },
             });
         }
-        if (!user.orders || user.orders.length === 0) {
+        const orders = yield user_service_1.userServices.getAllOrdersForUserFormDb(userId);
+        if (!orders || ((_a = orders.orders) === null || _a === void 0 ? void 0 : _a.length) === 0) {
             return res.status(200).json({
                 success: true,
                 message: 'No orders found for the user',
                 data: null,
             });
         }
-        const orders = yield user_service_1.userServices.getAllOrdersForUserFormDb(userId);
         res.status(200).json({
             success: true,
             message: 'Orders fetched successfully!',
-            data: {
-                orders,
-            },
+            data: { orders: orders.orders },
         });
     }
     catch (error) {

@@ -32,7 +32,7 @@ const getAllUsersFromDb = () => __awaiter(void 0, void 0, void 0, function* () {
 });
 //-------------------------------------------------------
 const getSingleUserFormDb = (userId) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield user_model_1.UserModel.findOne({ userId });
+    const result = yield user_model_1.UserModel.findOne({ userId }, { password: 0, 'fullName._id': 0, _id: 0, 'address._id': 0, orders: 0 });
     return result;
 });
 //-------------------------------------------------------
@@ -71,8 +71,7 @@ const addProductForSingleUserFromDb = (userId, productName, price, quantity) => 
 });
 //------------------------------------------------------
 const getAllOrdersForUserFormDb = (userId) => __awaiter(void 0, void 0, void 0, function* () {
-    const id = Number(userId);
-    const result = yield user_model_1.UserModel.findOne({ userId: id }, { orders: 1 });
+    const result = yield user_model_1.UserModel.findOne({ userId: userId }, { orders: 1 });
     return result;
 });
 //------------------------------------------------------
