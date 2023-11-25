@@ -166,14 +166,20 @@ const addProductForSingleUser = async (req: Request, res: Response) => {
       });
     }
 
-    user.orders = user.orders || [];
-
-    user.orders.push({
+    await userServices.addProductForSingleUserFromDb(
+      userId,
       productName,
       price,
       quantity,
-    });
-    await user.save();
+    );
+    // user.orders = user.orders || [];
+
+    // user.orders.push({
+    //   productName,
+    //   price,
+    //   quantity,
+    // });
+    // await user.save();
 
     res.status(200).json({
       success: true,

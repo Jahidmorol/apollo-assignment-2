@@ -46,14 +46,33 @@ const deleteUserFormDb = async (userId: string) => {
 };
 
 //------------------------------------------------------
-const addProductForSingleUserFromDb = async (userId: string) => {
+const getAllOrdersForUserFormDb = async (userId: string) => {
   const result = await UserModel.findOne({ userId });
   return result;
 };
 
 //------------------------------------------------------
-const getAllOrdersForUserFormDb = async (userId: string) => {
-  const result = await UserModel.findOne({ userId });
+const addProductForSingleUserFromDb = async (
+  userId: string,
+  productName: string,
+  price: number,
+  quantity: number,
+) => {
+  const id = Number(userId);
+
+  const result = await UserModel.findOneAndUpdate(
+    { userId: id },
+    {
+      $push: {
+        orders: {
+          productName,
+          price,
+          quantity,
+        },
+      },
+    },
+    { upsert: true },
+  );
   return result;
 };
 
