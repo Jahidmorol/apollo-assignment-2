@@ -14,6 +14,7 @@ const createUser = async (req: Request, res: Response) => {
       ...result.toObject(),
       password: undefined,
       _id: undefined,
+      orders: undefined,
     };
 
     res.status(200).json({
@@ -152,7 +153,7 @@ const addProductForSingleUser = async (req: Request, res: Response) => {
     const { userId } = req.params;
     const { productName, price, quantity } = req.body;
 
-    const user = await userServices.addProductForSingleUserFromDb(userId);
+    const user = await userServices.getSingleUserFormDb(userId);
 
     if (!user) {
       return res.status(404).json({
@@ -188,6 +189,97 @@ const addProductForSingleUser = async (req: Request, res: Response) => {
   }
 };
 
+//-----------------
+const getAllOrdersForUser = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    const user = await userServices.getSingleUserFormDb(userId);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found',
+        error: {
+          code: 404,
+          description: 'User not found!',
+        },
+      });
+    }
+
+    if (!user.orders || user.orders.length === 0) {
+      return res.status(200).json({
+        success: true,
+        message: 'No orders found for the user',
+        data: {
+          orders: [],
+        },
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Orders fetched successfully!',
+      data: {
+        orders: user.orders,
+      },
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Something went wrong',
+      data: error,
+    });
+  }
+};
+
+const getTotalOrdersPriceForUser = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    const user = await userServices.getSingleUserFormDb(userId);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found',
+        error: {
+          code: 404,
+          description: 'User not found!',
+        },
+      });
+    }
+
+    if (!user.orders || user.orders.length === 0) {
+      return res.status(200).json({
+        success: true,
+        message: 'No orders found for the user',
+        data: {
+          orders: [],
+        },
+      });
+    }
+
+    const totalPrice = user.orders.reduce(
+      (sum, order) => sum + order.price * order.quantity,
+      0,
+    );
+
+    res.status(200).json({
+      success: true,
+      message: 'Total price calculated successfully!',
+      data: {
+        totalPrice: totalPrice,
+      },
+    });
+
+    res.status(200).json();
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Something went wrong',
+      data: error,
+    });
+  }
+};
 //---------------------**************-------------------------//
 export const userController = {
   createUser,
@@ -196,4 +288,6 @@ export const userController = {
   updateUser,
   deleteUser,
   addProductForSingleUser,
+  getAllOrdersForUser,
+  getTotalOrdersPriceForUser,
 };

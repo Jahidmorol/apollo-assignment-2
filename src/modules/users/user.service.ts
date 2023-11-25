@@ -51,6 +51,20 @@ const addProductForSingleUserFromDb = async (userId: string) => {
   return result;
 };
 
+//------------------------------------------------------
+const getAllOrdersForUserFormDb = async (userId: string) => {
+  const result = await UserModel.findOne({ userId });
+  return result;
+};
+
+//------------------------------------------------------
+// const getTotalOrdersPriceForUserFormDb = async (userId: string) => {
+//   const result = await UserModel.findOne({ userId });
+//   if (result.orders.length > 0) {
+//   }
+//   return result;
+// };
+
 //-------------*********************************--------------------
 export const userServices = {
   createUserIntoDb,
@@ -59,4 +73,6 @@ export const userServices = {
   updateUserFormDb,
   deleteUserFormDb,
   addProductForSingleUserFromDb,
+  getAllOrdersForUserFormDb,
+  //   getTotalOrdersPriceForUserFormDb,
 };
