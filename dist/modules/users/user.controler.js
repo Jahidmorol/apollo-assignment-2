@@ -15,7 +15,7 @@ const user_validation_1 = require("./user.validation");
 //----------------
 const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { user: userData } = req.body;
+        const userData = req.body;
         const validationDataWithZod = user_validation_1.validatedUser.parse(userData);
         const result = yield user_service_1.userServices.createUserIntoDb(validationDataWithZod);
         res.status(200).json({

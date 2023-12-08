@@ -6,7 +6,7 @@ import { validatedUpdateUser, validatedUser } from './user.validation';
 //----------------
 const createUser = async (req: Request, res: Response) => {
   try {
-    const { user: userData } = req.body;
+    const userData = req.body;
     const validationDataWithZod = validatedUser.parse(userData);
     const result = await userServices.createUserIntoDb(validationDataWithZod);
 
